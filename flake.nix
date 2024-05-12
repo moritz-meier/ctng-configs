@@ -13,7 +13,7 @@
 
       packages.${system} = {
 
-        ctng = pkgs.stdenv.mkDerivation {
+        default = pkgs.stdenv.mkDerivation {
           pname = "ct-ng";
           version = "1.26.0";
           src = pkgs.fetchFromGitHub {
@@ -28,6 +28,8 @@
             automake
             bison
             flex
+            glibc
+            glibc.static
             help2man
             libtool
             ncurses
@@ -35,8 +37,6 @@
             texinfo
             unzip
             which
-            glibc
-            glibc.static
           ];
 
           configurePhase = ''
@@ -48,17 +48,19 @@
 
       devShells.${system}.default =
         (pkgs.buildFHSEnv {
-          name = "ct-ng-fhs";
+          name = "xtools";
           targetPkgs = pkgs: [
             self.packages.${system}.default
             pkgs.autoconf
             pkgs.binutils
             pkgs.gcc
+            pkgs.git
             pkgs.glibc
             pkgs.glibc.static
             pkgs.m4
             pkgs.python3
             pkgs.which
+            pkgs.zsh
           ];
 
           profile = ''
@@ -66,7 +68,7 @@
             unset CXX
             unset LD_LIBRARY_PATH
           '';
-          runScript = "bash";
+          runScript = "zsh";
         }).env;
     };
 }
