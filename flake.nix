@@ -24,6 +24,7 @@
           autoconf
           automake
           bison
+          curl
           flex
           help2man
           libtool
@@ -31,9 +32,8 @@
           python3
           texinfo
           unzip
+          wget
           which
-          glibc
-          glibc.static
         ];
 
         configurePhase = ''
@@ -46,13 +46,13 @@
 
         hardeningDisable = [ "all" ];
 
-        packages = [
+        packages = with pkgs; [
           self.packages.${system}.default
-          pkgs.autoconf
-          pkgs.m4
-          pkgs.python3
-          pkgs.glibc
-          pkgs.glibc.static
+          autoconf
+          curl
+          m4
+          python3
+          wget
         ];
 
         shellHook = ''
