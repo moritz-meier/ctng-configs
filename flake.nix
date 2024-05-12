@@ -42,23 +42,47 @@
         '';
       };
 
-      devShells.${system}.default = pkgs.mkShell {
+      # devShells.${system}.default = pkgs.mkShell {
 
-        hardeningDisable = [ "all" ];
+      #   hardeningDisable = [ "all" ];
 
-        packages = [
-          self.packages.${system}.default
-          pkgs.autoconf
-          pkgs.m4
-          pkgs.python3
-          pkgs.glibc
-          pkgs.glibc.static
-        ];
+      #   packages = [
+      #     self.packages.${system}.default
+      #     pkgs.autoconf
+      #     pkgs.m4
+      #     pkgs.python3
+      #     pkgs.glibc
+      #     pkgs.glibc.static
+      #   ];
 
-        shellHook = ''
-          unset CC
-          unset CXX
-        '';
-      };
+      #   shellHook = ''
+      #     unset CC
+      #     unset CXX
+      #   '';
+      # };
+
+      devShells.${system}.default =
+        (pkgs.buildFHSUserEnv {
+          name = "ct-ng-fhs";
+          targetPkgs = pkgs: [
+            self.packages.${system}.default
+            pkgs.autoconf
+            pkgs.m4
+            pkgs.python3
+            pkgs.glibc
+            pkgs.glibc.static
+            pkgs.gcc
+            pkgs.bintools
+            pkgs.which
+          ];
+
+          hardeningDisable = [ "all" ];
+          profile = ''
+            unset CC
+            unset CXX
+            unset LD_LIBRARY_PATH
+          '';
+          runScript = "bash";
+        }).env;
     };
 }
